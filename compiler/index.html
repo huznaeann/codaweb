@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodaWeb Platform Belajar Web Berbasis Website</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/theme/dracula.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-image: url(img/pattern.jpg);
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: rgb(93, 176, 137);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: rgb(72, 137, 107);
+        }
+
+        .CodeMirror {
+            display: inline-block;
+            border: 1px solid #ddd;
+            height: 200px;
+            width: 32%;
+            margin: 5px;
+        }
+
+        #editors {
+            display: inline-block;
+            width: 90%;
+        }
+
+        iframe {
+            width: 90%;
+            height: 300px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            background-color: whitesmoke;
+        }
+
+        button {
+            padding: 7px;
+            margin: 5px;
+            color: white;
+            background-color: rgb(93, 176, 137);
+            border-radius: 20%;
+        }
+
+        button:hover {
+            box-shadow: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="back-button" onclick="goBack()">Kembali</button>
+    <h1 style="color: rgb(155, 240, 213);">HTML/CSS/JS online editor</h1>
+    <div id="editors">
+        <textarea id="html-code" placeholder="HTML"></textarea>
+        <textarea id="css-code" placeholder="CSS"></textarea>
+        <textarea id="js-code" placeholder="JavaScript"></textarea>
+    </div>
+    <div>
+        <button onclick="runCode()">Run</button>
+        <button onclick="saveCode()">Simpan</button>
+        <button onclick="loadCode()">Muat Kembali</button>
+    </div>
+    <iframe id="output"></iframe>
+
+    <!-- Pustaka CodeMirror -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/addon/hint/show-hint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/addon/hint/show-hint.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/addon/hint/xml-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/addon/hint/css-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/addon/hint/javascript-hint.min.js"></script>
+
+    <script>
+        // Inisialisasi CodeMirror untuk HTML, CSS, dan JavaScript
+        var htmlEditor = CodeMirror.fromTextArea(document.getElementById('html-code'), {
+            mode: "text/html",
+            theme: "dracula",
+            lineNumbers: true,
+            autoCloseTags: true,
+            extraKeys: { "Ctrl-Space": "autocomplete" }
+        });
+
+        var cssEditor = CodeMirror.fromTextArea(document.getElementById('css-code'), {
+            mode: "css",
+            theme: "dracula",
+            lineNumbers: true,
+            extraKeys: { "Ctrl-Space": "autocomplete" }
+        });
+
+        var jsEditor = CodeMirror.fromTextArea(document.getElementById('js-code'), {
+            mode: "javascript",
+            theme: "dracula",
+            lineNumbers: true,
+            extraKeys: { "Ctrl-Space": "autocomplete" }
+        });
+
+        function runCode() {
+            const htmlCode = htmlEditor.getValue();
+            const cssCode = cssEditor.getValue();
+            const jsCode = jsEditor.getValue();
+
+            const output = document.getElementById('output');
+            output.contentDocument.body.innerHTML = htmlCode + "<style>" + cssCode + "</style>" + "<script>" + jsCode + "<\/script>";
+        }
+
+        function saveCode() {
+            localStorage.setItem('htmlCode', htmlEditor.getValue());
+            localStorage.setItem('cssCode', cssEditor.getValue());
+            localStorage.setItem('jsCode', jsEditor.getValue());
+            alert('Kode telah disimpan!');
+        }
+
+        function loadCode() {
+            const htmlCode = localStorage.getItem('htmlCode');
+            const cssCode = localStorage.getItem('cssCode');
+            const jsCode = localStorage.getItem('jsCode');
+
+            if (htmlCode || cssCode || jsCode) {
+                htmlEditor.setValue(htmlCode);
+                cssEditor.setValue(cssCode);
+                jsEditor.setValue(jsCode);
+                runCode();
+                alert('Kode telah dimuat kembali!');
+            } else {
+                alert('Tidak ada kode yang tersimpan.');
+            }
+        }
+
+        function goBack() {
+            window.location.href = "../index.html";
+        }
+    </script>
+</body>
+
+</html>
